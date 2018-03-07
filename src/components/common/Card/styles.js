@@ -12,8 +12,11 @@ export default StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 2,
         elevation: 1,
+        alignItems: 'stretch',
         marginHorizontal: Metrics.marginSmall,
         marginTop: Metrics.marginSmall,
-        position: 'absolute'
+        // position: 'absolute',
+        width: Metrics.screenWidth - 2 * Metrics.marginSmall,
+        backgroundColor: Colors.white,
     }
 });

@@ -1,10 +1,10 @@
-import { StyleSheet} from 'react-native';
+import { StyleSheet, Platform} from 'react-native';
 import {ApplicationStyles, Metrics} from '../../../Themes'
 const styles = StyleSheet.create({
     ...ApplicationStyles.screen,
     container:{
         flex:1,
-        paddingTop: Metrics.marginFull
+        paddingTop: (Platform.OS === 'ios') ? Metrics.marginFull : 0
     }
 });
 

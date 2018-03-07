@@ -3,6 +3,8 @@ import {
     View,
     Animated,
     PanResponder,
+    UIManager,
+    LayoutAnimation
 } from 'react-native'
 import Card from '../Card'
 import CardHeader from '../CardHeader'
@@ -12,7 +14,7 @@ import {Metrics, Colors} from '../../../Themes'
 
 
 const horizontalThreshold = 0.25 * Metrics.screenWidth
-const swipeAnimationDuration = 250;
+const swipeAnimationDuration = 300;
 
 export default class CardSwiper extends Component {
     state = {
@@ -22,7 +24,7 @@ export default class CardSwiper extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.data !== this.props.data) {
-            this.setState({ index: 0 });
+            this.setState({ index: 0 })
         }
     }
 
@@ -34,42 +36,49 @@ export default class CardSwiper extends Component {
         this._panResponder = PanResponder.create({
             onMoveShouldSetResponderCapture: () => true,
             onMoveShouldSetPanResponderCapture: () => true,
+
             // Initially, set the value of x and y to 0 (the center of the screen)
             onPanResponderGrant: (e, gestureState) => this.state.pan.setValue({x: 0, y: 0}),
-            onPanResponderMove:(e, {dx, dy}) => this.state.pan.setValue({x: dx, y: dy }) ,
+            // onPanResponderMove:(e, {dx, dy}) => this.state.pan.setValue({x: dx, y: dy }) ,
+            onPanResponderMove:(e, gestureState) => Animated.event([null, { dx: this.state.pan.x, dy: this.state.pan.y }])(e, gestureState),
 
             onPanResponderRelease: (e, {dx}) => {
                 if(dx > horizontalThreshold){
-                    this.swipeCard('right');
+                    this.swipeCard('right')
                 }
                 else if(dx < -horizontalThreshold) {
-                    this.swipeCard('left');
+                    this.swipeCard('left')
                 }
                 else {
                     Animated.spring(this.state.pan, {
                         toValue: { x: 0, y: 0 },
                         friction: 4,
-                    }).start();
+                    }).start()
                 }
             }
         });
     }
 
     swipeCard = (direction) => {
-        const x = direction === 'right' ? Metrics.screenWidth : -Metrics.screenWidth;
+        const x = direction === 'right' ? Metrics.screenWidth : -Metrics.screenWidth
         Animated.timing(this.state.pan, {
             toValue: { x, y: 0 },
             duration: swipeAnimationDuration
-        }).start(() => this.onSwipeComplete(direction));
+        }).start(() => this.onSwipeComplete(direction))
     }
 
     onSwipeComplete = (direction) => {
-        const { onSwipeLeft, onSwipeRight, data } = this.props;
-        const item = data[this.state.index];
-        const x = direction === 'right' ? Metrics.screenWidth : -Metrics.screenWidth;
-        direction === 'right' ? onSwipeRight && onSwipeRight(item) : onSwipeLeft && onSwipeLeft(item);
-        this.state.pan.setValue({ x: 0, y: 0 });
-        this.setState({ index: this.state.index + 1 });
+        const { onSwipeLeft, onSwipeRight, data } = this.props
+        const item = data[this.state.index]
+        const x = direction === 'right' ? Metrics.screenWidth : -Metrics.screenWidth
+        direction === 'right' ? onSwipeRight && onSwipeRight(item) : onSwipeLeft && onSwipeLeft(item)
+        this.state.pan.setValue({ x: 0, y: 0 })
+        this.setState({ index: this.state.index + 1 })
+    }
+
+    componentWillUpdate() {
+        UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true)
+        LayoutAnimation.spring()
     }
 
     interpolateRotation = () =>
@@ -87,20 +96,22 @@ export default class CardSwiper extends Component {
         );
     }
     renderCards = () =>{
-        if (this.state.index >= this.props.data.length) {
+        const {index} = this.state
+        let {data} = this.props
+        if (this.state.index >= data.length) {
             return this.renderEmptyView();
         }
         return(
-            this.props.data.map((dataItem, index) =>{
+            data.map((dataItem, i) =>{
                 let { pan } = this.state;
                 let rotate = this.interpolateRotation()
                 let cardStyle = [pan.getLayout(), {transform: [{rotate}]}]
-                if (index < this.state.index) { return null; }
+                if (i < index) { return null }
 
-                if (index === this.state.index) {
+                if (i === index) {
                     return (
-                        <Animated.View key={index}  style={[cardStyle,{ zIndex: 99 }]} {...this._panResponder.panHandlers}>
-                            <Card key={index}>
+                        <Animated.View key={i}  style={[cardStyle,{ zIndex: 99, position: 'absolute' }]} {...this._panResponder.panHandlers}>
+                            <Card>
                                 <CardHeader text={dataItem.name} textStyle={{textAlign: 'center'}} />
                                 <CardSection item={dataItem} />
                             </Card>
@@ -108,8 +119,8 @@ export default class CardSwiper extends Component {
                     )
                 }
                 return(
-                    <Animated.View  key={index} style={[{ top: 10 * (index - this.state.index), zIndex: 5 }]}>
-                        <Card key={index}>
+                    <Animated.View  key={i} style={[{ top: 10 * (i - index), zIndex: 5, position: 'absolute' }]}>
+                        <Card>
                             <CardHeader text={dataItem.name} textStyle={{textAlign: 'center'}} />
                             <CardSection item={dataItem} />
                         </Card>
@@ -120,13 +131,12 @@ export default class CardSwiper extends Component {
     }
 
     render() {
-        return (
+        return(
             <View>
                 {
                     this.renderCards()
                 }
             </View>
         )
-
     }
 }
