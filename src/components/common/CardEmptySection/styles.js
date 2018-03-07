@@ -6,20 +6,11 @@ export default StyleSheet.create({
         paddingHorizontal: Metrics.marginTiny,
         paddingBottom: Metrics.marginSmall
     },
-    sectionRow: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        alignItems: 'center',
-
-    },
-    labelText: {
-        ...Fonts.style.captionSmall,
-        fontWeight: '800'
-    },
-    valueText: {
-        ...Fonts.style.smallLightItalic,
-        color: Colors.facebook,
-        flex: 1
+    textStyle: {
+        ...Fonts.style.body,
+        fontWeight: 'normal',
+        color: Colors.darkgrey,
+        marginBottom: Metrics.baseMargin
     },
     seperator: {
         height: 1,

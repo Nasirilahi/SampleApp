@@ -4,9 +4,9 @@ import {connect} from 'react-redux'
 import { bindActionCreators } from 'redux';
 import styles from './styles'
 import {getData} from '../../../actions/homeActions'
-import CardList from '../../common/CardList'
+import CardSwiper from '../../common/CardSwiper'
 import withSpinner from '../../common/HOCs/withSpinner';
-const CardListWithSpinner = withSpinner(CardList);
+const CardSwiperWithSpinner = withSpinner(CardSwiper);
 
 class HomeScreen extends Component {
     static navigationOptions = {
@@ -21,7 +21,7 @@ class HomeScreen extends Component {
         const {data, isLoading} = this.props
         return(
             <View style={[styles.mainContainer, styles.container]}>
-                <CardListWithSpinner
+                <CardSwiperWithSpinner
                     data={data}
                     isLoading={isLoading}
                 />

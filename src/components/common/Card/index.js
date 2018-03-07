@@ -6,7 +6,7 @@ import {
 import styles from './styles'
 
 export default (props) =>
-        <View style={styles.container}>
+        <View style={[styles.container, props.style]}>
             {props.children}
         </View>
 

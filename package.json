@@ -12,6 +12,8 @@
     "react-native": "0.51.0",
     "react-native-awesome-card-io": "^0.7.0",
     "react-native-checkout": "0.0.7",
+    "react-native-elements": "^0.19.0",
+    "react-native-vector-icons": "^4.5.0",
     "react-navigation": "^1.4.0",
     "react-redux": "^5.0.7",
     "redux": "^3.7.2",
