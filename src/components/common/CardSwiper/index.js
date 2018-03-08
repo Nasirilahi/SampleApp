@@ -11,8 +11,6 @@ import CardHeader from '../CardHeader'
 import CardSection from '../CardSection'
 import CardEmptySection from '../CardEmptySection'
 import {Metrics, Colors} from '../../../Themes'
-
-
 const horizontalThreshold = 0.25 * Metrics.screenWidth
 const swipeAnimationDuration = 300;
 
@@ -39,7 +37,6 @@ export default class CardSwiper extends Component {
 
             // Initially, set the value of x and y to 0 (the center of the screen)
             onPanResponderGrant: (e, gestureState) => this.state.pan.setValue({x: 0, y: 0}),
-            // onPanResponderMove:(e, {dx, dy}) => this.state.pan.setValue({x: dx, y: dy }) ,
             onPanResponderMove:(e, gestureState) => Animated.event([null, { dx: this.state.pan.x, dy: this.state.pan.y }])(e, gestureState),
 
             onPanResponderRelease: (e, {dx}) => {
@@ -70,7 +67,6 @@ export default class CardSwiper extends Component {
     onSwipeComplete = (direction) => {
         const { onSwipeLeft, onSwipeRight, data } = this.props
         const item = data[this.state.index]
-        const x = direction === 'right' ? Metrics.screenWidth : -Metrics.screenWidth
         direction === 'right' ? onSwipeRight && onSwipeRight(item) : onSwipeLeft && onSwipeLeft(item)
         this.state.pan.setValue({ x: 0, y: 0 })
         this.setState({ index: this.state.index + 1 })
@@ -110,7 +106,7 @@ export default class CardSwiper extends Component {
 
                 if (i === index) {
                     return (
-                        <Animated.View key={i}  style={[cardStyle,{ zIndex: 99, position: 'absolute' }]} {...this._panResponder.panHandlers}>
+                        <Animated.View key={i}  style={[cardStyle,{ zIndex: i * -1, position: 'absolute' }]} {...this._panResponder.panHandlers}>
                             <Card>
                                 <CardHeader text={dataItem.name} textStyle={{textAlign: 'center'}} />
                                 <CardSection item={dataItem} />
@@ -119,14 +115,14 @@ export default class CardSwiper extends Component {
                     )
                 }
                 return(
-                    <Animated.View  key={i} style={[{ top: 10 * (i - index), zIndex: 5, position: 'absolute' }]}>
+                    <Animated.View  key={i} style={[{ top: 10 * (i - index), zIndex: i * -1, position: 'absolute' }]}>
                         <Card>
                             <CardHeader text={dataItem.name} textStyle={{textAlign: 'center'}} />
                             <CardSection item={dataItem} />
                         </Card>
                     </Animated.View>
                 )
-            }).reverse()
+            })
         )
     }
 

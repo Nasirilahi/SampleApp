@@ -23,21 +23,6 @@ const ApplicationStyles = {
       flex: 1,
       paddingTop: Metrics.baseMargin,
       backgroundColor: Colors.transparent
-    },
-    titleText: {
-      ...Fonts.style.h1,
-      color: Colors.text
-    },
-    headerContainer: {
-      marginHorizontal: Metrics.marginFull,
-      marginTop: Metrics.marginSmall
-    },
-    seperator: {
-      marginHorizontal: Metrics.marginFull,
-      flex: 1,
-      marginTop: Metrics.marginFull,
-      height: 1,
-      backgroundColor: Colors.sm_coolgrey
     }
   }
 }
